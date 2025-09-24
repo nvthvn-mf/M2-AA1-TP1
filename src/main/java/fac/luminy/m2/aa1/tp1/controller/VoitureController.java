@@ -1,5 +1,6 @@
 package fac.luminy.m2.aa1.tp1.controller;
 
+import fac.luminy.m2.aa1.tp1.model.TypeVoiture;
 import fac.luminy.m2.aa1.tp1.model.dto.VoitureDTO;
 import fac.luminy.m2.aa1.tp1.service.VoitureService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,5 +52,26 @@ public class VoitureController {
             @PathVariable String nom) {
         log.info("Controller - recuperation de voiture pour {}", nom);
         return service.recupererVoituresProprietaire(nom);
+    }
+
+    /**
+     * Recherche des voitures en fonction des préférences du locataire.
+     *
+     * @param type le type de voiture recherché (SUV, berline, sportive, etc.)
+     * @return une liste de {@link VoitureDTO} correspondant aux préférences
+     */
+    @Operation(summary = "Recherche des voitures selon les préférences du locataire",
+            description = "Retourne une liste de VoitureDTO en fonction du type de voiture recherché")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des voitures trouvée avec succès"),
+            @ApiResponse(responseCode = "404", description = "Aucune voiture trouvée pour ce type"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
+    @GetMapping("recherche")
+    public List<VoitureDTO> rechercherVoituresParPreference(
+            @Parameter(description = "Le type de voiture recherché (SUV, berline, compacte, etc.)", required = true)
+            @org.springframework.web.bind.annotation.RequestParam TypeVoiture type) {
+        log.info("Controller - recherche de voitures pour type {}", type);
+        return service.rechercherVoituresParType(type);
     }
 }

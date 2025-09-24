@@ -20,6 +20,8 @@ public class VoitureRepositoryTest {
 
     @Autowired
     private VoitureRepository voitureRepository;
+    @Autowired
+    private ProprietaireRepository proprietaireRepository;
 
     @Test
     public void testFindByProprietaireNom() {
@@ -28,17 +30,19 @@ public class VoitureRepositoryTest {
 
         Personne proprietaire = new Personne();
         proprietaire.setNom("Greenwood");
+        proprietaireRepository.save(proprietaire);
+
         voiture.setProprietaire(proprietaire);
         voiture.setMarque("Ferrari");
         voitureRepository.save(voiture);
 
         // Act
-        List<Voiture> result = voitureRepository.findByProprietaireNom("Doe");
+        List<Voiture> result = voitureRepository.findByProprietaireNom("Greenwood");
 
         // Assert
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals("Greenwood", result.get(0).getProprietaire().getNom());
+        assertEquals("Greenwood", result.getFirst().getProprietaire().getNom());
     }
 
     @Test
